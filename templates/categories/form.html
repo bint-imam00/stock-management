@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ "Modifier" if item else "Nouvelle" }} catégorie{% endblock %}
+{% block content %}
+<h2 class="mb-3"><i class="bi bi-tags"></i> {{ "Modifier" if item else "Nouvelle" }} catégorie</h2>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post">
+      <div class="mb-3">
+        <label class="form-label">Nom *</label>
+        <input type="text" name="name" class="form-control" value="{{ item.name if item else '' }}" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control" rows="3">{{ item.description if item else '' }}</textarea>
+      </div>
+      <button class="btn btn-primary"><i class="bi bi-save"></i> Enregistrer</button>
+      <a href="{{ url_for('categories.list_view') }}" class="btn btn-secondary">Annuler</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

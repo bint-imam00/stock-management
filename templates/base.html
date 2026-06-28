@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Gestion de Stock{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body class="bg-light">
+{% if current_user.is_authenticated %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="{{ url_for('dashboard.index') }}">
+      <i class="bi bi-box-seam"></i> StockApp
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard.index') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('categories.list_view') }}"><i class="bi bi-tags"></i> Catégories</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('products.list_view') }}"><i class="bi bi-box"></i> Produits</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('suppliers.list_view') }}"><i class="bi bi-truck"></i> Fournisseurs</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('stock_in.list_view') }}"><i class="bi bi-arrow-down-circle"></i> Entrées</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('stock_out.list_view') }}"><i class="bi bi-arrow-up-circle"></i> Sorties</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('inventory.list_view') }}"><i class="bi bi-clipboard-check"></i> Inventaire</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('reports.index') }}"><i class="bi bi-graph-up"></i> Rapports</a></li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <span class="navbar-text me-3"><i class="bi bi-person-circle"></i> {{ current_user.full_name or current_user.username }}</span>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-light btn-sm" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Déconnexion</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endif %}
+
+<main class="container-fluid py-4">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="row"><div class="col">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+      </div></div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="text-center text-muted py-3 small">
+  StockApp &copy; {{ 2026 }} — Application de gestion de stock
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

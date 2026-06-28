@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Ajuster stock - {{ product.name }}{% endblock %}
+{% block content %}
+<h2 class="mb-3"><i class="bi bi-pencil-square"></i> Ajuster le stock</h2>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h5>{{ product.name }} <small class="text-muted">{{ product.sku or '' }}</small></h5>
+    <p>Stock actuel : <strong>{{ product.quantity }}</strong></p>
+    <form method="post">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Nouvelle quantité *</label>
+          <input type="number" min="0" name="new_quantity" class="form-control" value="{{ product.quantity }}" required>
+        </div>
+        <div class="col-md-8">
+          <label class="form-label">Motif</label>
+          <input type="text" name="reason" class="form-control" placeholder="Comptage physique, perte, etc.">
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn btn-primary"><i class="bi bi-save"></i> Enregistrer</button>
+        <a href="{{ url_for('inventory.list_view') }}" class="btn btn-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

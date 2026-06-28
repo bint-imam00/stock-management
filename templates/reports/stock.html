@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Rapport - État du stock{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-boxes"></i> Rapport — État du stock</h2>
+  <div>
+    <a href="{{ url_for('reports.export_stock') }}" class="btn btn-success">
+      <i class="bi bi-file-earmark-excel"></i> Export Excel
+    </a>
+    <a href="{{ url_for('reports.index') }}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Retour
+    </a>
+  </div>
+</div>
+
+<div class="alert alert-info">
+  Valeur totale du stock : <strong>{{ "%.2f"|format(total_value) }}</strong>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr>
+        <th>Produit</th><th>SKU</th><th>Catégorie</th>
+        <th class="text-end">Prix</th><th class="text-end">Quantité</th>
+        <th class="text-end">Min</th><th class="text-end">Valeur</th><th>État</th>
+      </tr></thead>
+      <tbody>
+        {% for p in items %}
+        <tr>
+          <td><strong>{{ p.name }}</strong></td>
+          <td><code>{{ p.sku or '—' }}</code></td>
+          <td>{{ p.category.name }}</td>
+          <td class="text-end">{{ "%.2f"|format(p.price) }}</td>
+          <td class="text-end">{{ p.quantity }}</td>
+          <td class="text-end">{{ p.min_stock }}</td>
+          <td class="text-end">{{ "%.2f"|format(p.stock_value) }}</td>
+          <td>
+            {% if p.is_out_of_stock %}<span class="badge bg-danger">Rupture</span>
+            {% elif p.is_low_stock %}<span class="badge bg-warning text-dark">Bas</span>
+            {% else %}<span class="badge bg-success">OK</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Rapports{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-graph-up"></i> Rapports</h2>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <a href="{{ url_for('reports.stock') }}" class="text-decoration-none">
+      <div class="card stat-card text-bg-primary h-100"><div class="card-body">
+        <i class="bi bi-boxes display-5"></i>
+        <h4 class="mt-2">État du stock</h4>
+        <p class="mb-0 small">Niveau de stock par produit, valeur globale.</p>
+      </div></div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('reports.movements') }}" class="text-decoration-none">
+      <div class="card stat-card text-bg-success h-100"><div class="card-body">
+        <i class="bi bi-arrow-left-right display-5"></i>
+        <h4 class="mt-2">Mouvements</h4>
+        <p class="mb-0 small">Historique entrées/sorties, filtrable par période.</p>
+      </div></div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('reports.top_sold') }}" class="text-decoration-none">
+      <div class="card stat-card text-bg-warning h-100"><div class="card-body">
+        <i class="bi bi-trophy display-5"></i>
+        <h4 class="mt-2">Top ventes</h4>
+        <p class="mb-0 small">Produits les plus sortis sur une période.</p>
+      </div></div>
+    </a>
+  </div>
+</div>
+{% endblock %}

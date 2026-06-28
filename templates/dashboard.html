@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Tableau de bord{% endblock %}
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Tableau de bord</h2>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3 col-sm-6">
+    <div class="card stat-card text-bg-primary"><div class="card-body">
+      <i class="bi bi-box stat-icon float-end"></i>
+      <div class="text-uppercase small">Produits</div>
+      <div class="stat-value">{{ nb_products }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card stat-card text-bg-success"><div class="card-body">
+      <i class="bi bi-tags stat-icon float-end"></i>
+      <div class="text-uppercase small">Catégories</div>
+      <div class="stat-value">{{ nb_categories }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card stat-card text-bg-info"><div class="card-body">
+      <i class="bi bi-truck stat-icon float-end"></i>
+      <div class="text-uppercase small">Fournisseurs</div>
+      <div class="stat-value">{{ nb_suppliers }}</div>
+    </div></div>
+  </div>
+  <div class="col-md-3 col-sm-6">
+    <div class="card stat-card text-bg-warning"><div class="card-body">
+      <i class="bi bi-cash-stack stat-icon float-end"></i>
+      <div class="text-uppercase small">Valeur stock</div>
+      <div class="stat-value">{{ "%.2f"|format(total_stock_value) }}</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-white"><strong>Stock par catégorie</strong></div>
+      <div class="card-body"><canvas id="catChart" height="180"></canvas></div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-header bg-white"><strong>Top 5 des produits sortis</strong></div>
+      <div class="card-body"><canvas id="topChart" height="180"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-danger">
+      <div class="card-header bg-danger text-white">
+        <i class="bi bi-x-circle"></i> Produits en rupture ({{ out_of_stock|length }})
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for p in out_of_stock %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ p.name }} <small class="text-muted">({{ p.category.name }})</small></span>
+            <span class="badge bg-danger">{{ p.quantity }}</span>
+          </li>
+        {% else %}
+          <li class="list-group-item text-muted">Aucun produit en rupture.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm border-warning">
+      <div class="card-header bg-warning">
+        <i class="bi bi-exclamation-triangle"></i> Sous seuil minimum ({{ low_stock|length }})
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for p in low_stock %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ p.name }} <small class="text-muted">({{ p.category.name }})</small></span>
+            <span class="badge bg-warning text-dark">{{ p.quantity }} / {{ p.min_stock }}</span>
+          </li>
+        {% else %}
+          <li class="list-group-item text-muted">Aucun produit sous seuil.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+  const catLabels = {{ cat_stock|map(attribute=0)|list|tojson }};
+  const catData   = {{ cat_stock|map(attribute=1)|list|tojson }};
+  new Chart(document.getElementById('catChart'), {
+    type: 'doughnut',
+    data: { labels: catLabels, datasets: [{ data: catData, backgroundColor: ['#0d6efd','#198754','#ffc107','#dc3545','#6f42c1','#20c997','#fd7e14'] }] },
+    options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+  });
+
+  const topLabels = {{ top_sold|map(attribute=0)|list|tojson }};
+  const topData   = {{ top_sold|map(attribute=1)|list|tojson }};
+  new Chart(document.getElementById('topChart'), {
+    type: 'bar',
+    data: { labels: topLabels, datasets: [{ label: 'Quantité sortie', data: topData, backgroundColor: '#0d6efd' }] },
+    options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environnements virtuels
+venv/
+env/
+.venv/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE / éditeurs
+.vscode/
+.idea/
+.claude/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Base de données locale
+*.db
+*.sqlite
+*.sqlite3
+stock.db
+
+# Logs
+*.log
+logs/
+
+# Fichiers de session Flask
+flask_session/
+instance/
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Variables d'environnement
+.env
+.env.local
+
+# Fichiers temporaires
+*.tmp
+*.bak

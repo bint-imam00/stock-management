@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Rapport - Mouvements{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-arrow-left-right"></i> Rapport — Mouvements</h2>
+  <a href="{{ url_for('reports.index') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Retour
+  </a>
+</div>
+
+<form method="get" class="card card-body shadow-sm mb-3">
+  <div class="row g-2 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label">Du</label>
+      <input type="date" name="from" value="{{ date_from }}" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Au</label>
+      <input type="date" name="to" value="{{ date_to }}" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <button class="btn btn-primary"><i class="bi bi-funnel"></i> Filtrer</button>
+      <a href="{{ url_for('reports.movements') }}" class="btn btn-outline-secondary">Réinitialiser</a>
+    </div>
+    <div class="col-md-3 text-end">
+      <a href="{{ url_for('reports.export_movements', **{'from': date_from, 'to': date_to}) }}" class="btn btn-success">
+        <i class="bi bi-file-earmark-excel"></i> Export Excel
+      </a>
+    </div>
+  </div>
+</form>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white"><strong class="text-success"><i class="bi bi-arrow-down-circle"></i> Entrées ({{ stock_ins|length }})</strong></div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>Date</th><th>Produit</th><th>Fournisseur</th><th class="text-end">Qté</th></tr></thead>
+          <tbody>
+          {% for e in stock_ins %}
+            <tr>
+              <td>{{ e.created_at.strftime('%Y-%m-%d') }}</td>
+              <td>{{ e.product.name }}</td>
+              <td>{{ e.supplier.name }}</td>
+              <td class="text-end text-success">+{{ e.quantity }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="text-center text-muted py-3">Aucune entrée.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-white"><strong class="text-danger"><i class="bi bi-arrow-up-circle"></i> Sorties ({{ stock_outs|length }})</strong></div>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead><tr><th>Date</th><th>Produit</th><th>Motif</th><th class="text-end">Qté</th></tr></thead>
+          <tbody>
+          {% for s in stock_outs %}
+            <tr>
+              <td>{{ s.created_at.strftime('%Y-%m-%d') }}</td>
+              <td>{{ s.product.name }}</td>
+              <td class="text-muted">{{ s.reason or '—' }}</td>
+              <td class="text-end text-danger">-{{ s.quantity }}</td>
+            </tr>
+          {% else %}
+            <tr><td colspan="4" class="text-center text-muted py-3">Aucune sortie.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

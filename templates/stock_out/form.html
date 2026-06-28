@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Nouvelle sortie de stock{% endblock %}
+{% block content %}
+<h2 class="mb-3"><i class="bi bi-arrow-up-circle"></i> Nouvelle sortie de stock</h2>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post">
+      <div class="row g-3">
+        <div class="col-md-8">
+          <label class="form-label">Produit *</label>
+          <select name="product_id" class="form-select" required>
+            <option value="">— Choisir —</option>
+            {% for p in products %}
+              <option value="{{ p.id }}" data-stock="{{ p.quantity }}">
+                {{ p.name }} (stock dispo : {{ p.quantity }})
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Quantité *</label>
+          <input type="number" min="1" name="quantity" id="qty" class="form-control" required>
+          <div class="form-text" id="hint"></div>
+        </div>
+        <div class="col-12">
+          <label class="form-label">Motif</label>
+          <input type="text" name="reason" class="form-control" placeholder="Vente, casse, transfert, etc.">
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn btn-primary"><i class="bi bi-save"></i> Enregistrer</button>
+        <a href="{{ url_for('stock_out.list_view') }}" class="btn btn-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const sel = document.querySelector('select[name="product_id"]');
+  const qty = document.getElementById('qty');
+  const hint = document.getElementById('hint');
+  function refresh() {
+    const opt = sel.options[sel.selectedIndex];
+    const stock = parseInt(opt?.dataset.stock || '0', 10);
+    qty.max = stock || '';
+    hint.textContent = opt && opt.value ? 'Stock disponible : ' + stock : '';
+  }
+  sel.addEventListener('change', refresh);
+</script>
+{% endblock %}

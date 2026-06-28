@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Sorties de stock{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-arrow-up-circle"></i> Sorties de stock</h2>
+  <a href="{{ url_for('stock_out.new') }}" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Nouvelle sortie
+  </a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead><tr>
+        <th>Date</th><th>Produit</th><th class="text-end">Quantité</th><th>Motif</th>
+      </tr></thead>
+      <tbody>
+        {% for s in items %}
+        <tr>
+          <td>{{ s.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td><strong>{{ s.product.name }}</strong></td>
+          <td class="text-end"><span class="badge bg-danger">-{{ s.quantity }}</span></td>
+          <td class="text-muted">{{ s.reason or '—' }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-center text-muted py-4">Aucune sortie.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

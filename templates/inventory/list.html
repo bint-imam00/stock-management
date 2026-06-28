@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Inventaire{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2><i class="bi bi-clipboard-check"></i> Inventaire</h2>
+  <a href="{{ url_for('inventory.history') }}" class="btn btn-outline-secondary">
+    <i class="bi bi-clock-history"></i> Historique des ajustements
+  </a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle">
+      <thead><tr>
+        <th>Produit</th><th>Catégorie</th>
+        <th class="text-end">Stock réel</th><th class="text-end">Stock min</th>
+        <th class="text-end">Valeur</th><th>État</th><th class="text-end">Actions</th>
+      </tr></thead>
+      <tbody>
+        {% for p in items %}
+        <tr>
+          <td><strong>{{ p.name }}</strong> <small class="text-muted">{{ p.sku or '' }}</small></td>
+          <td>{{ p.category.name }}</td>
+          <td class="text-end fs-5"><strong>{{ p.quantity }}</strong></td>
+          <td class="text-end">{{ p.min_stock }}</td>
+          <td class="text-end">{{ "%.2f"|format(p.stock_value) }}</td>
+          <td>
+            {% if p.is_out_of_stock %}<span class="badge bg-danger">Rupture</span>
+            {% elif p.is_low_stock %}<span class="badge bg-warning text-dark">Bas</span>
+            {% else %}<span class="badge bg-success">OK</span>{% endif %}
+          </td>
+          <td class="text-end">
+            <a href="{{ url_for('inventory.adjust', product_id=p.id) }}" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-pencil-square"></i> Ajuster
+            </a>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="text-center text-muted py-4">Aucun produit.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

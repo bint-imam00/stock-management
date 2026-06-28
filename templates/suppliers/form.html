@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ "Modifier" if item else "Nouveau" }} fournisseur{% endblock %}
+{% block content %}
+<h2 class="mb-3"><i class="bi bi-truck"></i> {{ "Modifier" if item else "Nouveau" }} fournisseur</h2>
+{% set d = form or item %}
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Nom *</label>
+          <input type="text" name="name" class="form-control" value="{{ d.name if d else '' }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Contact</label>
+          <input type="text" name="contact" class="form-control" value="{{ d.contact if d else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" value="{{ d.email if d else '' }}">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Téléphone</label>
+          <input type="text" name="phone" class="form-control" value="{{ d.phone if d else '' }}">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Adresse</label>
+          <textarea name="address" class="form-control" rows="2">{{ d.address if d else '' }}</textarea>
+        </div>
+      </div>
+      <div class="mt-3">
+        <button class="btn btn-primary"><i class="bi bi-save"></i> Enregistrer</button>
+        <a href="{{ url_for('suppliers.list_view') }}" class="btn btn-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
